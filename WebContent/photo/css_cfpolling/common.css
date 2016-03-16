@@ -1,0 +1,148 @@
+*, ol, ul, p {
+  font-family: Microsoft YaHei;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 16px; }
+
+a {
+  text-decoration: none; }
+
+a:link {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none; }
+
+.ui-btn {
+  display: block;
+  width: 100%;
+  padding: 0.6em;
+  background-color: #EEE;
+  color: #363636; }
+
+.data {
+  width: 100%; }
+  .data tr:first-child td {
+    padding-top: 0.4em; }
+  .data tr:last-child td {
+    padding-bottom: 0.4em; }
+  .data tr td {
+    padding-left: 1em;
+    line-height: 100%; }
+  .data tr td:last-child {
+    padding-right: 1em; }
+  .data input[type=text] {
+    width: 100%;
+    padding: 0.3em;
+    margin: 0.3em 0;
+    color: #808080; }
+  .data textarea {
+    resize: none;
+    width: 100%;
+    padding: 0.5em;
+    border: solid 1px #AEAEAE; }
+  .data .title {
+    min-width: 5em;
+    color: #B0B0B0;
+    font-size: 0.95em;
+    line-height: 2em; }
+  .data .value {
+    width: 100%;
+    color: #808080;
+    font-size: 0.95em;
+    word-break: break-all; }
+  .data .det-btn {
+    text-align: right;
+    font-size: 0.8em;
+    color: #2E99FF; }
+
+.btn-bot {
+  border-radius: 0;
+  background-color: #2E99FF;
+  color: #FFF;
+  width: 100%;
+  font-size: 1.2em;
+  padding: 1em;
+  position: fixed;
+  bottom: 0;
+  border: none; }
+
+.list-item {
+  border-bottom: solid 1px #E9E9EA; }
+
+.dwhl .dwl {
+  display: block;
+  top: 0;
+  font-size: 1em;
+  color: #2E99FF;
+  background-color: #F7F7F7;
+  z-index: 10; }
+
+.dwbw {
+  text-align: center; }
+
+.mbsc-mobiscroll .dwbw.dwb-c {
+  float: left; }
+
+.mbsc-mobiscroll .dwbc {
+  position: absolute;
+  top: -3em;
+  background-color: #2E99FF;
+  padding: 0.4em; }
+
+.mytab > li {
+  margin: 0;
+  width: 50%;
+  border: none;
+  text-align: center; }
+  .mytab > li > a {
+    border: none;
+    position: relative;
+    font-size: 1.1em;
+    padding: 1em;
+    color: #3C3C3D; }
+.mytab .active {
+  border: none;
+  border-bottom: solid 2px #2E99FF; }
+.mytab .devLine:after {
+  content: " ";
+  border-left: solid 1px #969698;
+  height: 2em;
+  position: absolute;
+  top: 50%;
+  margin-top: -1em;
+  right: 0; }
+
+.mytab > li.active > a, .mytab > li.active > a:focus, .mytab > li.active > a:hover {
+  color: #2E99FF;
+  background-color: #FFF; }
+
+.mytab > li.active > a, .mytab > li.active > a:focus, .mytab > li.active > a:hover {
+  border: none; }
+
+.fixed-cps {
+  padding-bottom: 3em; }
+
+.ver-top {
+  vertical-align: top; }
+
+.page-det {
+  padding-bottom: 65px; }
+
+.radio-inline {
+  margin: 0.5em 0; }
+
+/*# sourceMappingURL=common.css.map */
+
+/*上传文件按钮*/
+.pho-mini-add{
+  opacity: 0;
+}
+
+.file-bg{
+  display: block;
+  width: 51px;
+  height: 50px;
+  background: url("../img/pho_add.png") center center no-repeat;
+}

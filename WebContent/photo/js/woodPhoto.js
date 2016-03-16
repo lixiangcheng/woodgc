@@ -1,0 +1,5 @@
+var woodController = {
+		islider : null,
+		
+		
+}

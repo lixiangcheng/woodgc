@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/cache 
+		http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+		http://www.springframework.org/schema/task   
+    	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	
+	<!-- ***************资源文件 ************** -->
+    <context:property-placeholder location="classpath*:dataSourceConfig.properties"/>
+    
+    <!-- ************** DataSource:  连接池 ****************-->
+    
+    <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource" destroy-method="forceCloseAll">  
+    	<property name="driver" value="${jdbc.driver}"/>
+    	<property name="url" value="${jdbc.url}"/>
+    	<property name="username" value="${jdbc.username}"/>
+    	<property name="password" value="${jdbc.password}"/>
+    	
+    	<!-- 最多连接 -->
+    	<property name="poolMaximumActiveConnections" value="${jdbc.maxActive}"/>
+    	<!-- 允许的挂起连接数 最多等待连接 -->
+		<property name="poolMaximumIdleConnections" value="${jdbc.maxIdle}"/>
+    	<property name="poolTimeToWait" value="${jdbc.maxWait}"/>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<!--要映射类的包路径，如果使用了这种方式，则configLocation中不必再进行声明-->
+    	<!--<property name="typeAliasesPackage" value=""/>-->
+    	<property name="configLocation" value="classpath:sqlmap/sqlMapConfig.xml"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<context:component-scan base-package="com.wood.*.controller"/>
+    <context:component-scan base-package="com.wood.*.service"/>
+    
+	<aop:config>
+		<aop:pointcut id="forServiceMethods" expression="execution(* com.wood.*.service.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="forServiceMethods"/>
+	</aop:config>
+	
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="query*" read-only="true" />
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="select*" read-only="true" />
+            <tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+        </tx:attributes>
+    </tx:advice>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    
+	<cache:annotation-driven cache-manager="cacheManager"/>
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+		<property name="caches">
+			<set>
+			<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="default"/>
+			<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="andCache"/>
+			</set>
+		</property>
+	</bean>
+			
+	<!-- 这样根目录下面的resource的文件(.css,.js等)就不会被spring的DispatchServlet进行过滤 -->  
+	<mvc:resources mapping="/scripts/**" location="/static_resources/javascript/"/>   
+	<mvc:resources mapping="purchase/css/**" location="/static_resources/css/"/>   
+	<mvc:resources mapping="/images/**" location="/static_resources/images/"/>
+	
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<!-- 多个拦截器,顺序执行 -->
+			
+		<mvc:interceptor>
+			<!-- 如果不配置或/*,将拦截所有的Controller 可以使用正则表达式对url进行匹配，从而更细粒度的进行拦截(.*/entryOrJsonController\.do\?action=reg.*)-->
+			<!--<mvc:mapping path="/**" /> 拦截所有文件跟子文件 -->
+			<mvc:mapping path="/*/*/*/*/*/*/*.htm"/>
+			<bean class="com.wood.common.interceptor.ControllerInterceptor">
+				<property name="excludedUrls">
+					<list>
+						<value>/scripts/(.*)/(.*).htm</value>
+						<value>.*jsp$</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/*/*.htm"/>
+			<mvc:mapping path="/*/*/*.htm"/>
+			<mvc:mapping path="/*/*/*/*.htm"/>
+			<bean class="com.wood.common.interceptor.SystemLogInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+    <!--  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>-->
+	<!--处理 @ResponseBody 中文乱码问题-->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<!-- 启动JSON格式的配置 -->
+				<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+					<!-- 解决 HttpMediaTypeNotAcceptableException: Could not find acceptable representation -->
+					<property name="supportedMediaTypes">
+						<list>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+	      <map>
+	        <entry key="html" value="text/html"/>
+	        <entry key="json" value="application/json"/>  
+	      </map>
+    	</property>
+    	<property name="viewResolvers">
+    	 <list>
+		    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		       <property name="viewClass">
+		       		<value>org.springframework.web.servlet.view.JstlView</value>
+		       </property>
+		       <property name="prefix">
+		       		<value>/WEB-INF/jsp/</value>
+		       	</property>
+		       <property name="suffix">
+		       		<value>.jsp</value>
+		       </property>
+		    </bean>
+		  </list>
+	    </property>
+	    <property name="defaultViews">
+	     <list>
+      		<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+    	 </list>
+	    </property>
+    </bean>
+    
+	<!-- 如果错误页面没有记录错误日志，那么你的log4j日志文件也是不会记录错误日志的，那么我们需要自己手动在错误页面中记录 
+		500错误,错误页面必须有打印的代码,不然继续出错
+	-->
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/errorFileUpload</prop>
+				<!--<prop key="java.lang.Exception">errors/error</prop>     
+                <prop key="java.lang.Throwable">errors/err</prop>-->
+			</props>
+		</property>
+        <property name="statusCodes">
+            <props>
+                <prop key="errors/error">500</prop>
+                <prop key="errors/errorFileUpload">412</prop>
+            </props>
+        </property>
+		<!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+		<property name="exceptionAttribute" value="ex"></property>
+        <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+        <property name="warnLogCategory" value="WARN"></property>
+        <!-- 默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置 -->
+        <property name="defaultErrorView" value="errors/error"></property>
+        <!-- 默认HTTP状态码 -->
+        <property name="defaultStatusCode" value="500"></property>
+    </bean>
+     
+    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--1024*1024即1mb，5242880=5mb-->
+		<property name="maxUploadSize" value="5242880"/>
+		<!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction中捕获文件大小异常-->
+		<property name="resolveLazily" value="true"/>
+	</bean>
+	<!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->
+	<!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->
+	<!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wood.*.mapper" />
+    </bean>
+    
+    <bean id="webApplicationContextTool" class="com.wood.common.util.WebApplicationContextTool"/>
+</beans>

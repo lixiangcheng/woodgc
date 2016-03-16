@@ -1,0 +1,22 @@
+.data {
+  width: 100%; }
+  .data .tit {
+    min-width: 5em;
+    color: #B0B0B0;
+    line-height: 3em;
+    font-size: 0.95em; }
+  .data .val {
+    color: #808080;
+    line-height: 2em;
+    font-size: 0.95em; }
+  .data input {
+    width: 100%;
+    border: solid 1px #EEE;
+    padding: 0.3em 1em; }
+  .data textarea {
+    width: 100%;
+    resize: none;
+    border: solid 1px #EEE;
+    padding: 0.3em 1em; }
+
+/*# sourceMappingURL=theme.css.map */

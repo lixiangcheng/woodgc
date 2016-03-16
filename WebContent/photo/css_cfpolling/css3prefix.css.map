@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AA4BA,MAAM;EAjBA,qBAAoB,EAkBM,IAAI;EAf9B,kBAAiB,EAeS,IAAI;EAT9B,gBAAe,EASW,IAAI;EAZ9B,iBAAgB,EAYU,IAAI;EALhC,aAAY,EAKgB,IAAI",
+"sources": ["../sass/css3prefix.scss"],
+"names": [],
+"file": "css3prefix.css"
+}

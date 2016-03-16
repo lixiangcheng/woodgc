@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<title>跟进结单</title>
+
+	<link href="photo/css/mobiscroll/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+    <link href="photo/css/mobiscroll/mobiscroll.frame.css" rel="stylesheet" type="text/css" />
+    <link href="photo/css/mobiscroll/mobiscroll.icons.css" rel="stylesheet" type="text/css" />
+    <link href="photo/css/mobiscroll/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="photo/css/bootstrap.min.css">
+    <link rel="stylesheet" href="photo/css/iSlider.css">
+	<link rel="stylesheet" href="photo/css/main.css">
+    <link rel="stylesheet" href="photo/css/thumbnail.css"/>
+	<link rel="stylesheet" href="photo/css/loading.css"/>
+	<style>
+		/* mobiscroll */
+        .dwhl .dwl{
+            display: block;
+            top: 0;font-size: 1em;
+            color: #2E99FF;
+            background-color: #F7F7F7;
+            z-index: 10;
+        }
+        .dwbw{
+            text-align: center;
+        }
+        .mbsc-mobiscroll .dwbw.dwb-c{
+            float: left;
+        }
+        .mbsc-mobiscroll .dwbc{
+            position: absolute;
+            top: -3em;
+            background-color: #2E99FF;
+            padding: 0.4em;
+        }
+        /* dropdown */
+        .mytab>li{
+			width: 33.33333%;
+			font-size: 0.8em;
+		}
+		.mytab li button{
+			font-size: 0.8em;
+			text-align: center;
+		}
+		.dropdownSelect-container .dropdownSelect-menu{
+			width: 12em;
+			background-color: #FFF;
+			margin-top: 0.5em;
+			box-shadow: 0 0 10px 5px #EEE;
+		}
+		.dropdownSelect-container .dropdownSelect-menu li{
+			font-size: 1em;
+		}
+        .islider-outer > li{
+            background-color: #000;
+            position: fixed;
+            margin-top: 0;
+        }
+        .islider-pic img{
+            width: 100%;
+        }
+        /*返回删除按钮*/
+        .islide-btnbar {
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            width: 100%;
+            background-color: #2E99FF;
+        }
+        .islide-btnbar button{
+            border: 0;
+            background: none;
+            padding: 1em;
+            color: #FFF;
+        }
+        .islide-btnbar button:last-child{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div id="tab_list">
+	<ul class="nav nav-tabs mytab">
+		<li class="devLine active">
+			<div class="dropdownSelect-container" id="dropdownCurrent">
+				<button class="value-container" id="dropdownCurrentBtn">
+					待处理工单
+				</button>
+				<ul class="dropdownSelect-menu">
+					<li status="notcom" probtype="all" value="待处理工单" style="display: none">待处理工单</li>
+					<li status="notcom" probtype="common" value="日常报障">日常报障</li>
+					<li status="notcom" probtype="preventive" value="计划性维护">计划性维护</li>
+					<li status="notcom" probtype="self" value="自检工单">自检工单</li>
+				</ul>
+				<span class="glyphicon glyphicon-triangle-bottom arrowflag"></span>
+			</div>
+		</li>
+		<li class="devLine">
+			<div class="dropdownSelect-container" id="dropdownHistory">
+				<button class="value-container" id="dropdownHistoryBtn">
+					历史工单
+				</button>
+				<ul class="dropdownSelect-menu">
+					<li status="com" probtype="all" value="历史工单" style="display: none">历史工单</li>
+					<li status="com" probtype="common" value="日常报障">日常报障</li>
+					<li status="com" probtype="preventive" value="计划性维护">计划性维护</li>
+					<li status="com" probtype="self" value="自检工单">自检工单</li>
+				</ul>
+				<span class="glyphicon glyphicon-triangle-bottom arrowflag"></span>
+			</div>
+		</li>
+		<li class="evaluation_summary"><a id="wr_summary_btn" style="line-height:36px;color:#808080;">工单统计</a></li>
+	</ul>
+	<div class="tab-content">
+	  <div class="tab-pane active my" id="my">
+	  	<ul id="my_list_ul">
+			<!-- <li class="work-item">
+				<table>
+					<tr>
+						<td class="tit">单&emsp;号</td>
+						<td class="val">MG12584025</td>
+					</tr>
+					<tr>
+						<td class="tit">报障人</td>
+						<td class="val">FMA</td>
+					</tr>
+					<tr>
+						<td class="tit">类&emsp;型</td>
+						<td class="val">工程消防</td>
+					</tr>
+					<tr>
+						<td class="tit">日&emsp;期</td>
+						<td class="val">2015-11-12</td>
+					</tr>
+					<tr>
+						<td class="tit vaTop">内&emsp;容</td>
+						<td class="val">
+							<ol>
+								<li>检查水泵振动和噪音是否正常;</li>
+								<li>检查水泵，电机本体外表清洁，水泵与周边环境5S....</li>
+							</ol>
+						</td>
+					</tr>
+				</table>
+				<span class="status ing"><span class="text">紧急</span></span>
+				<span class="status impo"><span class="text">重要</span></span>
+				<span class="status complete"><span class="text">一般</span></span>
+				<span class="opentip">详情&ensp;&gt;</span>
+			</li> -->
+	  	</ul>
+	  </div>
+	</div>
+</div>
+<div style="display:none" id="tab_detail" class="tab-pane fast active"> 
+	<div class="header">
+	    <a class="btn btn-primary" id="tab_detail_back">
+	    	<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+	    	<span>返回</span>
+	    </a>
+	    工单详情
+    </div>
+    <ul class="det" id="tab_detail_ul">
+        <!-- <li>
+            <a class="ui-btn">工单请求</a>
+            <table class="data">
+                <tr>
+                    <td class="title">工&ensp;单&ensp;号</td>
+                    <td class="value">1252</td>
+                </tr>
+                <tr>
+                    <td class="title">日&emsp;&emsp;期</td>
+                    <td class="value subInfo">2015-02-03 10:09</td>
+                </tr>
+                <tr>
+                    <td class="title">报&ensp;障&ensp;人</td>
+                    <td class="value">AFM</td>
+                </tr>
+                <tr>
+                    <td class="title">位&emsp;&emsp;置</td>
+                    <td class="value">TX-SZ 01F 0101</td>
+                </tr>
+                <tr>
+                    <td class="title">工单类型</td>
+                    <td class="value">工程消防/定期维护-防火分隔维护</td>
+                </tr>
+                <tr>
+                    <td class="title vaTop">工作内容</td>
+                    <td class="value inspect subInfo">
+                        <ol>
+                            <li>检查水泵振动和噪音是否正常;</li>
+                            <li>检查水泵，电机本体外表清洁，水泵与周边环境5S;</li>
+                            <li>检查水泵轴封是否良好，有无漏水;（机械密封无渗漏，填料密封每分钟不多于10滴）</li>
+                            <li>检查水泵联轴器是否运行良好，电机与水泵是否对齐成一直线;</li>
+                            <li>检查水泵各部分有无破损，螺栓有无松动;</li>
+                            <li>检查水泵及相关管道，阀门等连接件有无渗漏;</li>
+                            <li>检查基础减振装置;</li>
+                            <li>检查水泵管路、阀门、单向阀、软接是否正常，水泵进出开关是否灵活;</li>
+                            <li>检查水泵变频器、PLC控制器功能是否正常;</li>
+                            <li>检查电机轴承是否有异常，是否过热现象;（无异常噪音/振动，轴承温升不超过40°C）</li>
+                            <li>检查所有开关控制柜元器件（开关、表盘、旋钮、按钮、指示灯、门锁等）功能是否正常;</li>
+                            <li>电机电流与电压测量（电压：额定电压±5%；电流≤额定电流，三相电流不平衡≤10%;</li>
+                        </ol>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">设备编码</td>
+                    <td class="value">AC010000001（冷水机组）</td>
+                </tr>
+
+                <tr>
+                    <td class="title">状&emsp;&emsp;态</td>
+                    <td class="value">
+                        <select name="" id="demo2">
+                            <option value="已发布">已发布</option>
+                            <option value="等待备件">等待备件</option>
+                            <option value="等待排期">等待排期</option>
+                            <option value="正在处理">正在处理</option>
+                            <option value="完成">完成</option>
+                            <option value="已验证">已验证</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </li>
+        <li>
+            <a class="ui-btn editBtn">指派技工<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            <table class="data">
+                <tr>
+                    <td class="title">技&emsp;&emsp;工</td>
+                    <td class="value">
+                        <input type="text" placeholder="AFM"/>
+                    </td>
+                    <td class="valBtn addBtn">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="title">主管建议</td>
+                    <td class="value subInfo">
+                        <input type="text" placeholder="水漏"/>
+                    </td>
+                </tr>
+            </table>
+        </li>
+        <li>
+            <a class="ui-btn editBtn">上传附件<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            <div class="row data">
+                <section class="thumbnail" id="thumbnail">
+                    <div class="thumbnail-container">
+                        <img src="img/ph.png" alt="" class="pho-mini"/>
+                        <img src="img/ph2.png" alt="" class="pho-mini"/>
+                        <img src="img/ph3.png" alt="" class="pho-mini"/>
+                        <img src="img/pho_add.png" alt="" class="pho-mini-add"/>
+                    </div>
+                </section>
+            </div>
+        </li>
+        <li>
+            <a  class="ui-btn editBtn"  id="">工作说明<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            <div class="data">
+                <div class="col-sm-12 edit"><textarea rows="4" placeholder="请输入工作说明"></textarea></div>
+            </div>
+        </li> -->
+		
+    </ul>
+    
+</div>
+<div style="display:none" id="tab_summary">
+	<div class="header">
+	    <a class="btn btn-primary" id="tab_summary_back">
+	    	<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+	    	<span>返回</span>
+	    </a>
+	    工单统计
+	</div>
+	<div class="ui-content">
+	    <ul class="det" id="tab_summary_ul">
+	        <!-- <li>
+	            <a href="#" class="ui-btn">历史工单</a>
+	            <table class="data">
+	                <tr>
+	                    <td class="title">好评</td>
+	                    <td class="value">30</td>
+	                </tr>
+	                <tr>
+	                    <td class="title">一般</td>
+	                    <td class="value subInfo">30</td>
+	                </tr>
+	                <tr>
+	                    <td class="title">差评</td>
+	                    <td class="value subInfo">30</td>
+	                </tr>
+	            </table>
+	        </li>
+	        <li>
+	            <a href="#" class="ui-btn">当月工单</a>
+	            <table class="data">
+	                <tr>
+	                    <td class="title">好评</td>
+	                    <td class="value">30</td>
+	                </tr>
+	                <tr>
+	                    <td class="title">一般</td>
+	                    <td class="value subInfo">30</td>
+	                </tr>
+	                <tr>
+	                    <td class="title">差评</td>
+	                    <td class="value subInfo">30</td>
+	                </tr>
+	            </table>
+	        </li> -->
+	    </ul>
+	</div>
+</div>
+<div hidden>
+	<form id="uploadImgForm" enctype="multipart/form-data" method="post">
+	    <input id="upload_doc1" type="file" name="doc1" accept="image/*" capture="camera"/>
+	    <input id="upload_doc2" type="file" name="doc2" accept="image/*" capture="camera"/>
+	    <input id="upload_doc3" type="file" name="doc3" accept="image/*" capture="camera"/>
+	    <input id="upload_doc4" type="file" name="doc4" accept="image/*" capture="camera"/>
+	</form>
+</div>
+<!-- 相册容器 -->
+<div id="iSlider-wrapper">
+    <div class="islide-btnbar" style="display: none">
+        <button id="closeISlider">返回</button>
+        <button id="deleteISliderImg">删除</button>
+    </div>
+</div>
+
+<script src="photo/js/jquery-2.1.4.min.js"></script>
+<script src="photo/js/bootstrap.min.js"></script>
+<!-- mobiscroll-->
+<script src="photo/js/mobiscroll/mobiscroll.core.js"></script>
+<script src="photo/js/mobiscroll/mobiscroll.frame.js"></script>
+<script src="photo/js/mobiscroll/mobiscroll.select.js"></script>
+<script src="photo/js/mobiscroll/mobiscroll.scroller.js"></script>
+<script src="photo/js/mobiscroll/i18n/mobiscroll.i18n.zh.js"></script>
+<!-- mobiscroll-->
+<script src="photo/js/loading.js"></script>
+<script src="photo/js/iSlider.js"></script>
+<script src="photo/js/dropdownSelect.js"></script>
+<script src="photo/js/wrcf.js"></script>
+<script>
+	$(document).ready(function () {
+		tab('.mytab');
+	});
+
+	function tab(range){
+        $('li',range).unbind('click');
+		$('li',range).bind('click',function(){
+            var _this = $(this);
+            if(_this.hasClass('devLine')){
+                $('li',range).removeClass('active');
+                _this.addClass('active');
+            }else if(_this.hasClass('evaluation_summary')){
+                if(typeof wrcfController != 'undefined'){
+                    wrcfController.dropdownCurrent._close();
+                    wrcfController.dropdownHistory._close();
+                }
+            }
+		});
+	}
+</script>
+</body>
+</html>

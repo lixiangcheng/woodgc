@@ -1,0 +1,15 @@
+package com.wood.common.service;
+
+import com.wood.common.mapper.SystemLogMapper;
+import com.wood.common.model.SystemLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SysService
+{
+
+  @Autowired
+  private SystemLogMapper systemLogMapper;
+
+}

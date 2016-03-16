@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<!--引入配置文件 -->
+	<properties resource="generator.properties" />
+
+	<!-- 指定数据连接驱动jar地址 -->
+	<classPathEntry location="${classPath}/mysql-connector-java.jar" />
+
+	<context id="ORACLETables" targetRuntime="MyBatis3"
+		defaultModelType="conditional">
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+		<!-- 不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true"></property>
+		</commentGenerator>
+
+		<jdbcConnection driverClass="${jdbc_driver}"
+			connectionURL="${jdbc_url}" userId="${jdbc_user}" password="${jdbc_password}">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="com.java.${module}.model"
+			targetProject="${project}">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="sqlmap.${module}"
+			targetProject="${project}">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.java.${module}.mapper" targetProject="${project}">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<table tableName="T_03_USER" domainObjectName="User"
+	    	enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" 
+	    	enableSelectByExample="false" selectByExampleQueryId="false">
+	    	<columnOverride  column="ID" property="id" javaType="java.lang.Long" jdbcType="INTEGER"/>
+	    </table>
+	</context>
+</generatorConfiguration>

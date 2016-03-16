@@ -1,0 +1,38 @@
+.thumbnail {
+  border: none; }
+  .thumbnail .thumbnail-container .pho-mini, .thumbnail .thumbnail-container .pho-mini-add {
+    width: 4em;
+    height: 4em;
+    cursor: pointer;
+    margin: 0.4em 0.1em 0em 1em}
+
+.thumbnail-phoPanel {
+  box-sizing: border-box;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: black; }
+  .thumbnail-phoPanel .btn-group {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 1em; }
+  .thumbnail-phoPanel .btn {
+    border-radius: 0;
+    outline: none;
+    padding: 0.6em;
+    font-size: 1.1em;
+    width: 45%; }
+  .thumbnail-phoPanel .btn:first-child {
+    float: left; }
+  .thumbnail-phoPanel .btn:last-child {
+    float: right; }
+  .thumbnail-phoPanel .pho-big {
+    top: 0;
+    left: 0;
+    max-width: 90%; }
+
+/*# sourceMappingURL=thumbnail.css.map */

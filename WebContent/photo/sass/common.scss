@@ -1,0 +1,133 @@
+//common
+*,ol, ul, p{
+  font-family: Microsoft YaHei;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+a{
+  text-decoration: none;
+}
+a:link{
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: none;
+}
+
+//表格
+.ui-btn{
+  display: block;
+  width: 100%;
+  padding: 0.6em;
+  background-color: #EEE;
+  color: #363636;
+}
+.data{
+  margin: 0.8em 1em;
+  input[type=text]{
+    width: 100%;
+    padding: 0.3em;
+    margin: 0.3em 0;
+    color: #808080;
+  }
+  textarea{
+    resize: none;
+    width: 100%;
+    padding: 0.5em;
+    border: solid 1px #AEAEAE;
+  }
+  .title{
+    min-width: 5em;
+    color: #B0B0B0;
+    font-size: 0.95em;
+    line-height: 2em;
+  }
+  .value{
+    width: 100%;
+    color: #808080;
+    font-size: 0.95em;
+    word-break: break-all;
+  }
+}
+//按钮
+.btn-bot{
+  border-radius: 0;
+  background-color: #2E99FF;
+  color: #FFF;
+  width: 100%;
+  font-size: 1.2em;
+  padding: 1em;
+  position: fixed;
+  bottom: 0;
+}
+
+//覆盖mobilescroll样式
+.dwhl .dwl{
+  display: block;
+  top: 0;font-size: 1em;
+  color: #2E99FF;
+  background-color: #F7F7F7;
+  z-index: 10;
+}
+.dwbw{
+  text-align: center;
+}
+.mbsc-mobiscroll .dwbw.dwb-c{
+  float: left;
+}
+.mbsc-mobiscroll .dwbc{
+  position: absolute;
+  top: -3em;
+  background-color: #2E99FF;
+  padding: 0.4em;
+}
+
+//覆盖boostatraptab样式
+.mytab{
+  >li{
+    margin: 0;
+    width: 50%;
+    border: none;
+    text-align: center;
+    >a{
+      border: none;
+      position: relative;
+      font-size: 1.1em;
+      padding: 1em;
+      color: #3C3C3D;
+    }
+  }
+  .active{
+    border: none;
+    border-bottom: solid 2px #2E99FF;
+  }
+  .devLine:after{
+    content: " ";
+    border-left: solid 1px #969698;
+    height: 2em;
+    position: absolute;
+    top: 50%;
+    margin-top: -1em;
+    right: 0;
+  }
+}
+
+.mytab>li.active>a, .mytab>li.active>a:focus, .mytab>li.active>a:hover{
+  color: #2E99FF;
+  background-color: #FFF;
+}
+.mytab>li.active>a, .mytab>li.active>a:focus, .mytab>li.active>a:hover{
+  border: none;
+}
+
+//fixed补偿
+.fixed-cps{
+  padding-bottom: 3em;
+}
+
+//垂直居上
+.ver-top{
+  vertical-align: top;
+}
